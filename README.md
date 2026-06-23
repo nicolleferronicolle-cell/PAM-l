@@ -1,2 +1,2 @@
 # PAM-I
-Nicolle e Suzana
+Nicolle Ferro e Suzana Leite do Carmo
