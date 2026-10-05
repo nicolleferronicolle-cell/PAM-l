@@ -1,4 +1,6 @@
+
 import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -6,298 +8,441 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Image,
   FlatList,
   Keyboard,
 } from "react-native";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  NavigationContainer,
+} from "@react-navigation/native";
+
+import {
+  createNativeStackNavigator,
+} from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
-/* =====================================================
+/* =========================================================
    CORES
-===================================================== */
+========================================================= */
 
 const COLORS = {
-  background: "#191a1c",
-  dark: "#101113",
-  header: "#292a2d",
-  panel: "#303136",
+  background: "#1b1c1e",
+  dark: "#111214",
+  header: "#27282b",
+  panel: "#303236",
   panelDark: "#242528",
 
   red: "#8b151b",
-  redDark: "#5c0d12",
+  redDark: "#5d0d12",
   redLight: "#b52a31",
 
   gold: "#c9a84c",
-  goldLight: "#e0c66d",
+  goldLight: "#e1c86c",
 
   white: "#f2f2f2",
   gray: "#b8b8b8",
-  border: "#48494d",
+  grayDark: "#777777",
+
+  border: "#4a4b4f",
 };
 
-/* =====================================================
+/* =========================================================
+   IMAGEM PADRÃO
+========================================================= */
+
+const IMAGEM_PADRAO =
+  "https://placehold.co/400x600/242528/c9a84c?text=Sem+Imagem";
+
+/* =========================================================
    PERSONAGENS
-===================================================== */
+=========================================================
+
+   PARA TROCAR UMA FOTO:
+
+   imagem: "https://link-da-sua-imagem.jpg"
+
+   Basta trocar o endereço dentro das aspas.
+
+========================================================= */
 
 const personagens = [
   {
     id: "1",
     nome: "Elena Gilbert",
-    especie: "Doppelgänger / Vampira",
+    especie: "Humana / Doppelgänger",
+    busca: "elena gilbert elena",
     descricao:
-      "Elena Gilbert é uma das principais personagens da história e vive em Mystic Falls.",
+      "Elena Gilbert é uma das personagens centrais de The Vampire Diaries e está no centro dos acontecimentos sobrenaturais de Mystic Falls.",
+
+    imagem:
+      "https://i.pinimg.com/736x/10/45/06/104506c8b2efa3d3e797a86c77ce686e.jpg",
   },
 
   {
     id: "2",
     nome: "Stefan Salvatore",
     especie: "Vampiro",
+    busca: "stefan salvatore stefan",
     descricao:
-      "Stefan Salvatore é um dos irmãos Salvatore e possui uma forte ligação com Mystic Falls.",
+      "Stefan Salvatore é irmão de Damon Salvatore e uma das figuras centrais da história. Seu diário está relacionado ao título da série.",
+
+    imagem:
+      "https://i.pinimg.com/736x/e3/2e/4b/e32e4b4d5b8b0bb4f86e4577120ec0f7.jpg",
   },
 
   {
     id: "3",
     nome: "Damon Salvatore",
     especie: "Vampiro",
+    busca: "damon salvatore damon",
     descricao:
-      "Damon Salvatore é irmão de Stefan e uma das figuras centrais da história.",
+      "Damon Salvatore é irmão de Stefan e possui uma relação importante com os acontecimentos de Mystic Falls.",
+
+    imagem:
+      "https://i.pinimg.com/736x/7b/e4/60/7be460f1df1f1d1189ae0b646f054506.jpg",
   },
 
   {
     id: "4",
     nome: "Bonnie Bennett",
     especie: "Bruxa",
+    busca: "bonnie bennett bonnie bruxa",
     descricao:
-      "Bonnie Bennett pertence à família Bennett e possui habilidades mágicas.",
+      "Bonnie Bennett pertence à família Bennett e é uma das personagens sobrenaturais importantes da história.",
+
+    imagem:
+      "https://i.pinimg.com/736x/3f/ed/f2/3fedf2d035845d1f9249ae6acd567974.jpg",
   },
 
   {
     id: "5",
     nome: "Caroline Forbes",
     especie: "Vampira",
+    busca: "caroline forbes caroline vampira",
     descricao:
-      "Caroline Forbes é uma das personagens importantes de Mystic Falls.",
+      "Caroline Forbes é uma personagem de Mystic Falls e amiga de Elena e de outros integrantes do grupo.",
+
+    imagem:
+      "https://i.pinimg.com/736x/99/67/b9/9967b905bd7a4dfb8812f379a4a79bcc.jpg",
   },
 
   {
     id: "6",
     nome: "Matt Donovan",
     especie: "Humano",
+    busca: "matt donovan matt humano",
     descricao:
-      "Matt Donovan é um dos moradores humanos de Mystic Falls.",
+      "Matt Donovan é um dos moradores humanos de Mystic Falls e está ligado a diversos acontecimentos da cidade.",
+
+    imagem:
+      "https://i.pinimg.com/736x/e8/0e/07/e80e0721ab62cea5b420c6323631b954.jpg",
   },
 
   {
     id: "7",
     nome: "Jeremy Gilbert",
     especie: "Humano",
+    busca: "jeremy gilbert jeremy",
     descricao:
-      "Jeremy Gilbert é irmão de Elena e está envolvido com acontecimentos sobrenaturais.",
+      "Jeremy Gilbert é irmão de Elena e está envolvido com acontecimentos sobrenaturais de Mystic Falls.",
+
+    imagem:
+      "https://i.pinimg.com/736x/38/6f/0a/386f0ab9471047c8375b361ca11f29fe.jpg",
   },
 
   {
     id: "8",
     nome: "Alaric Saltzman",
-    especie: "Humano / Caçador",
+    especie: "Humano",
+    busca: "alaric saltzman alaric",
     descricao:
-      "Alaric Saltzman é professor e caçador ligado aos acontecimentos de Mystic Falls.",
+      "Alaric Saltzman é professor, caçador e uma das figuras ligadas à proteção de Mystic Falls.",
+
+    imagem:
+      "https://i.pinimg.com/736x/28/25/62/2825629f5221bd2106e4f1ad1744302e.jpg",
   },
 
   {
     id: "9",
     nome: "Niklaus Mikaelson",
     especie: "Híbrido",
+    busca: "niklaus mikaelson klaus niklaus",
     descricao:
-      "Niklaus Mikaelson é um poderoso personagem sobrenatural.",
+      "Niklaus Mikaelson é um personagem sobrenatural importante associado aos acontecimentos de Mystic Falls.",
+
+    imagem:
+      "https://i.pinimg.com/736x/d8/6a/3f/d86a3f97b4fe76b6f03af4dad4eedb66.jpg",
   },
 ];
 
-/* =====================================================
-   LOCAIS
-===================================================== */
+/* =========================================================
+   TEMPORADAS
+========================================================= */
 
-const locais = [
+const temporadas = [
   {
     id: "1",
-    nome: "Mystic Falls",
-    descricao: "A principal cidade onde acontecem muitos eventos da série.",
+    nome: "1ª temporada",
+    episodios: 22,
+    busca: "1 primeira temporada temporada 1",
+    imagem:
+      "https://i.pinimg.com/1200x/80/55/c4/8055c433c000b76ad68b82b75bf3460f.jpg",
   },
 
   {
     id: "2",
-    nome: "Mystic Grill",
-    descricao: "Um dos locais conhecidos e frequentados pelos personagens.",
+    nome: "2ª temporada",
+    episodios: 22,
+    busca: "2 segunda temporada temporada 2",
+    imagem:
+      "https://i.pinimg.com/736x/10/df/eb/10dfeb0d42fb267224b9e9e65b88230a.jpg",
   },
 
   {
     id: "3",
-    nome: "Pensão Salvatore",
-    descricao: "Residência associada aos irmãos Salvatore.",
+    nome: "3ª temporada",
+    episodios: 22,
+    busca: "3 terceira temporada temporada 3",
+    imagem:
+      "https://i.pinimg.com/1200x/90/e6/a1/90e6a13a854ea5c3db0190937ba1631c.jpg",
   },
 
   {
     id: "4",
-    nome: "Mystic Falls High School",
-    descricao: "Escola frequentada por diversos personagens.",
+    nome: "4ª temporada",
+    episodios: 23,
+    busca: "4 quarta temporada temporada 4",
+    imagem:
+      "https://i.pinimg.com/1200x/ec/d0/22/ecd0224d49242ce8bf2308cf51a762e8.jpg",
   },
 
   {
     id: "5",
-    nome: "Wickery Bridge",
-    descricao: "Uma das localidades conhecidas de Mystic Falls.",
+    nome: "5ª temporada",
+    episodios: 22,
+    busca: "5 quinta temporada temporada 5",
+    imagem:
+      "https://i.pinimg.com/1200x/3d/3a/be/3d3abe318af8410b86fd12087aaa9dfe.jpg",
+  },
+
+  {
+    id: "6",
+    nome: "6ª temporada",
+    episodios: 22,
+    busca: "6 sexta temporada temporada 6",
+    imagem:
+      "https://i.pinimg.com/1200x/7a/1b/e4/7a1be45c0d87ca02d91ef87fd6d8e21d.jpg",
+  },
+
+  {
+    id: "7",
+    nome: "7ª temporada",
+    episodios: 22,
+    busca: "7 sétima temporada temporada 7",
+    imagem:
+      "https://i.pinimg.com/1200x/fd/6d/8f/fd6d8f1d84c4c226dd8c39cac36ba670.jpg",
+  },
+
+  {
+    id: "8",
+    nome: "8ª temporada",
+    episodios: 16,
+    busca: "8 oitava temporada temporada 8 final",
+    imagem:
+      "https://i.pinimg.com/736x/aa/fa/b0/aafab0ace4212719778abd0925a747ba.jpg",
   },
 ];
 
-/* =====================================================
-   TEMPORADAS
-===================================================== */
+/* =========================================================
+   LOCAIS
+========================================================= */
 
-const temporadas = [
-  { id: "1", nome: "1ª Temporada", episodios: 22 },
-  { id: "2", nome: "2ª Temporada", episodios: 22 },
-  { id: "3", nome: "3ª Temporada", episodios: 22 },
-  { id: "4", nome: "4ª Temporada", episodios: 23 },
-  { id: "5", nome: "5ª Temporada", episodios: 22 },
-  { id: "6", nome: "6ª Temporada", episodios: 22 },
-  { id: "7", nome: "7ª Temporada", episodios: 22 },
-  { id: "8", nome: "8ª Temporada", episodios: 16 },
+const locais = [
+  {
+    id: "mystic-falls",
+    titulo: "Mystic Falls",
+    subtitulo: "Cidade fictícia da Virgínia",
+    palavras: "mystic falls cidade virgínia cidade fictícia",
+    imagem:
+      "https://i.pinimg.com/736x/17/87/25/178725e92918efa9f2596f675ffea0fe.jpg",
+  },
+
+  {
+    id: "mystic-grill",
+    titulo: "Mystic Grill",
+    subtitulo: "Local de Mystic Falls",
+    palavras: "mystic grill grill restaurante",
+    imagem:
+      "https://i.pinimg.com/736x/b3/6a/08/b36a0845743dfe5099da51612a7a748e.jpg",
+  },
+
+  {
+    id: "salvatore",
+    titulo: "Pensão Salvatore",
+    subtitulo: "Residência dos irmãos Salvatore",
+    palavras:
+      "pensão salvatore casa salvatore stefan damon",
+    imagem:
+      "https://i.pinimg.com/1200x/13/f1/99/13f199834b0817b4e48c0a6a4c532b78.jpg",
+  },
+
+  {
+    id: "school",
+    titulo: "Mystic Falls High School",
+    subtitulo: "Escola de Mystic Falls",
+    palavras:
+      "escola mystic falls high school colegio",
+    imagem:
+      "https://i.pinimg.com/736x/b5/87/f1/b587f1129f806b760610d3e75ec03340.jpg",
+  },
+
+  {
+    id: "wickery",
+    titulo: "Wickery Bridge",
+    subtitulo: "Local de Mystic Falls",
+    palavras:
+      "wickery bridge ponte wickery ponte",
+    imagem:
+      "https://i.pinimg.com/1200x/88/01/6b/88016b731d11f273fb60cd043ff1f2ef.jpg",
+  },
 ];
 
-/* =====================================================
+/* =========================================================
    PESQUISA
-===================================================== */
+========================================================= */
 
-function pesquisarTudo(texto) {
+function pesquisarWiki(texto) {
   const termo = texto.toLowerCase().trim();
 
-  if (termo === "") {
+  if (!termo) {
     return [];
   }
 
   const resultados = [];
 
   personagens.forEach((personagem) => {
-    const nome = personagem.nome.toLowerCase();
-    const especie = personagem.especie.toLowerCase();
-
     if (
-      nome.includes(termo) ||
-      especie.includes(termo)
+      personagem.nome.toLowerCase().includes(termo) ||
+      personagem.busca.includes(termo)
     ) {
       resultados.push({
-        id: "p" + personagem.id,
+        id: "personagem-" + personagem.id,
         titulo: personagem.nome,
         subtitulo: personagem.especie,
         tipo: "Personagem",
         tela: "Personagens",
-      });
-    }
-  });
-
-  locais.forEach((local) => {
-    const nome = local.nome.toLowerCase();
-    const descricao = local.descricao.toLowerCase();
-
-    if (
-      nome.includes(termo) ||
-      descricao.includes(termo)
-    ) {
-      resultados.push({
-        id: "l" + local.id,
-        titulo: local.nome,
-        subtitulo: "Local de Mystic Falls",
-        tipo: "Local",
-        tela: "MysticFalls",
+        imagem: personagem.imagem,
       });
     }
   });
 
   temporadas.forEach((temporada) => {
-    const nome = temporada.nome.toLowerCase();
-
     if (
-      nome.includes(termo) ||
-      temporada.id === termo
+      temporada.nome.toLowerCase().includes(termo) ||
+      temporada.busca.includes(termo)
     ) {
       resultados.push({
-        id: "t" + temporada.id,
+        id: "temporada-" + temporada.id,
         titulo: temporada.nome,
-        subtitulo: temporada.episodios + " episódios",
+        subtitulo:
+          temporada.episodios + " episódios",
         tipo: "Temporada",
         tela: "Temporadas",
+        imagem: temporada.imagem,
+      });
+    }
+  });
+
+  locais.forEach((local) => {
+    if (
+      local.titulo.toLowerCase().includes(termo) ||
+      local.palavras.includes(termo)
+    ) {
+      resultados.push({
+        id: local.id,
+        titulo: local.titulo,
+        subtitulo: local.subtitulo,
+        tipo: "Local",
+        tela: "MysticFalls",
+        imagem: local.imagem,
       });
     }
   });
 
   if (
     "the vampire diaries".includes(termo) ||
-    "vampire diaries".includes(termo)
+    termo.includes("vampire") ||
+    termo.includes("diaries") ||
+    termo.includes("série") ||
+    termo.includes("serie")
   ) {
     resultados.push({
       id: "serie",
       titulo: "The Vampire Diaries",
-      subtitulo: "Série",
+      subtitulo: "Série de televisão",
       tipo: "Série",
       tela: "Inicio",
+      imagem: IMAGEM_PADRAO,
     });
   }
 
   return resultados;
 }
 
-/* =====================================================
-   CABEÇALHO DA WIKI
-===================================================== */
+/* =========================================================
+   CABEÇALHO
+========================================================= */
 
 function WikiHeader({ navigation }) {
   const [pesquisa, setPesquisa] = useState("");
-  const [mostrar, setMostrar] = useState(false);
+  const [mostrarResultados, setMostrarResultados] =
+    useState(false);
 
-  const resultados = pesquisarTudo(pesquisa);
+  const resultados = pesquisarWiki(pesquisa);
 
-  function pesquisar() {
+  function realizarPesquisa() {
     Keyboard.dismiss();
 
-    if (pesquisa.trim() === "") {
-      setMostrar(false);
+    if (!pesquisa.trim()) {
+      setMostrarResultados(false);
       return;
     }
 
-    setMostrar(true);
+    setMostrarResultados(true);
   }
 
   function abrirResultado(resultado) {
-    setMostrar(false);
     setPesquisa("");
+    setMostrarResultados(false);
 
     navigation.navigate(resultado.tela);
   }
 
   return (
-    <View style={styles.header}>
+    <View style={styles.headerContainer}>
 
       <View style={styles.topBar}>
         <Text style={styles.topBarText}>
           THE VAMPIRE DIARIES
         </Text>
 
-        <Text style={styles.wikiText}>
+        <Text style={styles.topBarWiki}>
           WIKI
         </Text>
       </View>
 
       <View style={styles.logoArea}>
-        <Text style={styles.logo}>
+
+        <Text style={styles.logoTitle}>
           The Vampire Diaries Wiki
         </Text>
 
-        <Text style={styles.logoSub}>
-          ENCICLOPÉDIA DO UNIVERSO
+        <Text style={styles.logoSubtitle}>
+          THE VAMPIRE DIARIES • THE ORIGINALS • LEGACIES
         </Text>
+
       </View>
 
       <View style={styles.searchArea}>
@@ -309,81 +454,118 @@ function WikiHeader({ navigation }) {
           value={pesquisa}
           onChangeText={(texto) => {
             setPesquisa(texto);
-            setMostrar(true);
+            setMostrarResultados(true);
           }}
-          onSubmitEditing={pesquisar}
+          onSubmitEditing={realizarPesquisa}
           returnKeyType="search"
         />
 
         <TouchableOpacity
           style={styles.searchButton}
-          onPress={pesquisar}
+          onPress={realizarPesquisa}
         >
-          <Text style={styles.searchButtonText}>
+
+          <Text style={styles.searchIcon}>
             🔎
           </Text>
+
         </TouchableOpacity>
 
       </View>
 
-      {mostrar && pesquisa.trim() !== "" && (
-        <View style={styles.resultsBox}>
+      {mostrarResultados &&
+        pesquisa.trim() !== "" && (
 
-          {resultados.length === 0 ? (
-            <View style={styles.noResult}>
-              <Text style={styles.noResultTitle}>
-                Nenhum resultado
-              </Text>
+        <View style={styles.searchResults}>
 
-              <Text style={styles.noResultText}>
-                Tente pesquisar por Elena, Stefan,
-                Damon, Bonnie, Mystic Falls ou uma
-                temporada.
-              </Text>
-            </View>
-          ) : (
+          {resultados.length > 0 ? (
+
             <>
-              <Text style={styles.resultsTitle}>
-                RESULTADOS
+
+              <Text style={styles.searchResultsTitle}>
+                RESULTADOS DA PESQUISA
               </Text>
 
-              {resultados.map((resultado) => (
+              {resultados
+                .slice(0, 6)
+                .map((resultado) => (
+
                 <TouchableOpacity
                   key={resultado.id}
-                  style={styles.resultItem}
+                  style={styles.searchResult}
                   onPress={() =>
                     abrirResultado(resultado)
                   }
                 >
-                  <View style={styles.resultIcon}>
-                    <Text>
-                      {resultado.tipo === "Personagem"
-                        ? "👤"
-                        : resultado.tipo === "Local"
-                        ? "📍"
-                        : resultado.tipo === "Temporada"
-                        ? "📺"
-                        : "📖"}
-                    </Text>
-                  </View>
 
-                  <View style={styles.resultText}>
-                    <Text style={styles.resultTitle}>
+                  {/* FOTO DO RESULTADO */}
+
+                  <Image
+                    source={{
+                      uri:
+                        resultado.imagem ||
+                        IMAGEM_PADRAO,
+                    }}
+                    style={styles.searchResultImage}
+                  />
+
+                  <View
+                    style={
+                      styles.searchResultText
+                    }
+                  >
+
+                    <Text
+                      style={
+                        styles.searchResultTitle
+                      }
+                    >
                       {resultado.titulo}
                     </Text>
 
-                    <Text style={styles.resultSubtitle}>
+                    <Text
+                      style={
+                        styles.searchResultSubtitle
+                      }
+                    >
                       {resultado.tipo} •{" "}
                       {resultado.subtitulo}
                     </Text>
+
                   </View>
 
-                  <Text style={styles.resultArrow}>
+                  <Text
+                    style={styles.searchArrow}
+                  >
                     ›
                   </Text>
+
                 </TouchableOpacity>
+
               ))}
+
             </>
+
+          ) : (
+
+            <View style={styles.noResults}>
+
+              <Text
+                style={styles.noResultsTitle}
+              >
+                Nenhum resultado encontrado
+              </Text>
+
+              <Text
+                style={styles.noResultsText}
+              >
+                Tente pesquisar por Elena,
+                Stefan, Damon, Bonnie,
+                Mystic Falls ou uma temporada.
+              </Text>
+
+            </View>
+
           )}
 
         </View>
@@ -396,7 +578,7 @@ function WikiHeader({ navigation }) {
       >
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={styles.menuItem}
           onPress={() =>
             navigation.navigate("Inicio")
           }
@@ -407,7 +589,7 @@ function WikiHeader({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={styles.menuItem}
           onPress={() =>
             navigation.navigate("Personagens")
           }
@@ -418,7 +600,7 @@ function WikiHeader({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={styles.menuItem}
           onPress={() =>
             navigation.navigate("MysticFalls")
           }
@@ -429,7 +611,7 @@ function WikiHeader({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={styles.menuItem}
           onPress={() =>
             navigation.navigate("Temporadas")
           }
@@ -445,33 +627,37 @@ function WikiHeader({ navigation }) {
   );
 }
 
-/* =====================================================
+/* =========================================================
    LOGIN
-===================================================== */
+========================================================= */
 
 function LoginScreen({ navigation }) {
+
   const [usuario, setUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] =
+    useState("");
+
   const [erro, setErro] = useState("");
 
-  function entrar() {
+  function validarLogin() {
+
     setErro("");
 
-    if (usuario.trim() === "") {
+    if (!usuario.trim()) {
       setErro("Digite seu nome de usuário.");
       return;
     }
 
-    if (email.trim() === "") {
+    if (!email.trim()) {
       setErro("Digite seu e-mail.");
       return;
     }
 
     const emailValido =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email.trim()
+        email
       );
 
     if (!emailValido) {
@@ -479,19 +665,19 @@ function LoginScreen({ navigation }) {
       return;
     }
 
-    if (senha === "") {
+    if (!senha) {
       setErro("Digite sua senha.");
       return;
     }
 
     if (senha.length < 6) {
       setErro(
-        "A senha deve ter pelo menos 6 caracteres."
+        "A senha precisa ter pelo menos 6 caracteres."
       );
       return;
     }
 
-    if (confirmarSenha === "") {
+    if (!confirmarSenha) {
       setErro("Confirme sua senha.");
       return;
     }
@@ -510,11 +696,13 @@ function LoginScreen({ navigation }) {
   return (
     <ScrollView
       style={styles.page}
-      contentContainerStyle={styles.loginPage}
+      contentContainerStyle={
+        styles.loginContainer
+      }
       keyboardShouldPersistTaps="handled"
     >
 
-      <Text style={styles.vampireIcon}>
+      <Text style={styles.loginLogo}>
         🩸
       </Text>
 
@@ -522,27 +710,27 @@ function LoginScreen({ navigation }) {
         THE VAMPIRE DIARIES
       </Text>
 
-      <Text style={styles.loginWiki}>
+      <Text style={styles.loginSubtitle}>
         WIKI
       </Text>
 
-      <View style={styles.loginBox}>
+      <View style={styles.wikiBox}>
 
-        <View style={styles.loginHeader}>
-          <Text style={styles.loginHeaderText}>
+        <View style={styles.boxHeader}>
+          <Text style={styles.boxHeaderText}>
             ENTRAR NA WIKI
           </Text>
         </View>
 
-        <View style={styles.loginContent}>
+        <View style={styles.boxContent}>
 
           <Text style={styles.label}>
-            Usuário
+            Nome de usuário
           </Text>
 
           <TextInput
             style={styles.input}
-            placeholder="Digite seu usuário"
+            placeholder="Seu usuário"
             placeholderTextColor="#777"
             value={usuario}
             onChangeText={setUsuario}
@@ -555,7 +743,7 @@ function LoginScreen({ navigation }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Digite seu e-mail"
+            placeholder="seuemail@email.com"
             placeholderTextColor="#777"
             value={email}
             onChangeText={setEmail}
@@ -569,7 +757,7 @@ function LoginScreen({ navigation }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Mínimo de 6 caracteres"
             placeholderTextColor="#777"
             value={senha}
             onChangeText={setSenha}
@@ -590,73 +778,106 @@ function LoginScreen({ navigation }) {
           />
 
           {erro !== "" && (
-            <View style={styles.errorBox}>
-              <Text style={styles.errorTitle}>
+
+            <View style={styles.loginError}>
+
+              <Text
+                style={
+                  styles.loginErrorTitle
+                }
+              >
                 ⚠ ERRO
               </Text>
 
-              <Text style={styles.errorText}>
+              <Text
+                style={
+                  styles.loginErrorText
+                }
+              >
                 {erro}
               </Text>
+
             </View>
+
           )}
 
           <TouchableOpacity
             style={styles.redButton}
-            onPress={entrar}
+            onPress={validarLogin}
           >
-            <Text style={styles.redButtonText}>
+
+            <Text
+              style={styles.redButtonText}
+            >
               ENTRAR
             </Text>
+
           </TouchableOpacity>
 
         </View>
+
       </View>
+
+      <Text style={styles.footerText}>
+        Crie seu perfil para explorar a wiki.
+      </Text>
 
     </ScrollView>
   );
 }
 
-/* =====================================================
+/* =========================================================
    PERFIL
-===================================================== */
+========================================================= */
 
-function PerfilScreen({ navigation, route }) {
-  const usuario = route.params?.usuario || "";
-  const email = route.params?.email || "";
+function PerfilScreen({
+  navigation,
+  route,
+}) {
+
+  const usuario =
+    route.params?.usuario || "";
+
+  const email =
+    route.params?.email || "";
 
   const [nome, setNome] = useState("");
-  const [sobrenome, setSobrenome] = useState("");
+  const [sobrenome, setSobrenome] =
+    useState("");
   const [idade, setIdade] = useState("");
   const [cidade, setCidade] = useState("");
-  const [especie, setEspecie] = useState("");
+  const [especie, setEspecie] =
+    useState("");
+  const [descricao, setDescricao] =
+    useState("");
 
   const [erro, setErro] = useState("");
 
   function salvarPerfil() {
+
     setErro("");
 
-    if (nome.trim() === "") {
+    if (!nome.trim()) {
       setErro("Digite seu nome.");
       return;
     }
 
-    if (sobrenome.trim() === "") {
+    if (!sobrenome.trim()) {
       setErro("Digite seu sobrenome.");
       return;
     }
 
-    if (idade.trim() === "") {
+    if (!idade.trim()) {
       setErro("Digite sua idade.");
       return;
     }
 
-    if (cidade.trim() === "") {
+    if (!cidade.trim()) {
       setErro("Digite sua cidade.");
       return;
     }
 
-    if (especie.trim() === "") {
+    if (!especie.trim()) {
       setErro("Digite sua espécie.");
       return;
     }
@@ -664,7 +885,7 @@ function PerfilScreen({ navigation, route }) {
     const idadeNumero = Number(idade);
 
     if (
-      isNaN(idadeNumero) ||
+      !Number.isInteger(idadeNumero) ||
       idadeNumero <= 0 ||
       idadeNumero > 120
     ) {
@@ -677,36 +898,51 @@ function PerfilScreen({ navigation, route }) {
       email,
       nome: nome.trim(),
       sobrenome: sobrenome.trim(),
-      idade: idadeNumero,
+      idade,
       cidade: cidade.trim(),
       especie: especie.trim(),
+      descricao: descricao.trim(),
     });
   }
 
   return (
     <ScrollView
       style={styles.page}
-      contentContainerStyle={styles.profilePage}
+      contentContainerStyle={
+        styles.profileContainer
+      }
       keyboardShouldPersistTaps="handled"
     >
 
       <View style={styles.simpleHeader}>
-        <Text style={styles.simpleHeaderText}>
+
+        <Text
+          style={
+            styles.simpleHeaderTitle
+          }
+        >
           THE VAMPIRE DIARIES WIKI
         </Text>
+
       </View>
 
-      <View style={styles.loginBox}>
+      <View style={styles.wikiBox}>
 
-        <View style={styles.loginHeader}>
-          <Text style={styles.loginHeaderText}>
+        <View style={styles.boxHeader}>
+
+          <Text
+            style={styles.boxHeaderText}
+          >
             CRIAR PERFIL
           </Text>
+
         </View>
 
-        <View style={styles.loginContent}>
+        <View style={styles.boxContent}>
 
-          <Text style={styles.profileUser}>
+          <Text
+            style={styles.profileWelcome}
+          >
             Usuário: {usuario}
           </Text>
 
@@ -716,7 +952,7 @@ function PerfilScreen({ navigation, route }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Seu nome"
+            placeholder="Nome"
             placeholderTextColor="#777"
             value={nome}
             onChangeText={setNome}
@@ -728,7 +964,7 @@ function PerfilScreen({ navigation, route }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Seu sobrenome"
+            placeholder="Sobrenome"
             placeholderTextColor="#777"
             value={sobrenome}
             onChangeText={setSobrenome}
@@ -740,12 +976,15 @@ function PerfilScreen({ navigation, route }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Sua idade"
+            placeholder="Idade"
             placeholderTextColor="#777"
             value={idade}
             onChangeText={(texto) =>
               setIdade(
-                texto.replace(/[^0-9]/g, "")
+                texto.replace(
+                  /[^0-9]/g,
+                  ""
+                )
               )
             }
             keyboardType="numeric"
@@ -757,7 +996,7 @@ function PerfilScreen({ navigation, route }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Sua cidade"
+            placeholder="Cidade"
             placeholderTextColor="#777"
             value={cidade}
             onChangeText={setCidade}
@@ -769,160 +1008,258 @@ function PerfilScreen({ navigation, route }) {
 
           <TextInput
             style={styles.input}
-            placeholder="Humano, Vampiro, Bruxa..."
+            placeholder="Humano, vampiro, bruxa..."
             placeholderTextColor="#777"
             value={especie}
             onChangeText={setEspecie}
           />
 
+          <Text style={styles.label}>
+            Sobre você
+          </Text>
+
+          <TextInput
+            style={[
+              styles.input,
+              styles.textArea,
+            ]}
+            placeholder="Conte um pouco sobre você..."
+            placeholderTextColor="#777"
+            value={descricao}
+            onChangeText={setDescricao}
+            multiline
+          />
+
           {erro !== "" && (
-            <View style={styles.errorBox}>
-              <Text style={styles.errorTitle}>
+
+            <View style={styles.loginError}>
+
+              <Text
+                style={
+                  styles.loginErrorTitle
+                }
+              >
                 ⚠ ERRO
               </Text>
 
-              <Text style={styles.errorText}>
+              <Text
+                style={
+                  styles.loginErrorText
+                }
+              >
                 {erro}
               </Text>
+
             </View>
+
           )}
 
           <TouchableOpacity
             style={styles.redButton}
             onPress={salvarPerfil}
           >
-            <Text style={styles.redButtonText}>
-              ENTRAR NA WIKI
+
+            <Text
+              style={styles.redButtonText}
+            >
+              SALVAR PERFIL
             </Text>
+
           </TouchableOpacity>
 
         </View>
+
       </View>
 
     </ScrollView>
   );
 }
 
-/* =====================================================
+/* =========================================================
    INÍCIO
-===================================================== */
+========================================================= */
 
-function InicioScreen({ navigation, route }) {
-  const nome = route.params?.nome || "Visitante";
+function InicioScreen({
+  navigation,
+  route,
+}) {
+
+  const perfil = route.params;
 
   return (
     <ScrollView
       style={styles.page}
-      contentContainerStyle={styles.homePage}
+      contentContainerStyle={
+        styles.content
+      }
     >
 
-      <WikiHeader navigation={navigation} />
+      <WikiHeader
+        navigation={navigation}
+      />
 
       <View style={styles.hero}>
 
-        <Text style={styles.heroSmall}>
-          THE
-        </Text>
-
         <Text style={styles.heroTitle}>
-          VAMPIRE
+          THE VAMPIRE DIARIES
         </Text>
 
-        <Text style={styles.heroTitle}>
-          DIARIES
+        <Text style={styles.heroSubtitle}>
+          WIKI
         </Text>
 
-        <Text style={styles.heroWelcome}>
-          Bem-vindo(a), {nome}
+        <Text style={styles.heroText}>
+          Explore personagens, temporadas
+          e locais de Mystic Falls.
         </Text>
 
       </View>
 
-      <View style={styles.article}>
+      {perfil?.nome && (
 
-        <Text style={styles.articleTitle}>
-          The Vampire Diaries Wiki
-        </Text>
+        <View style={styles.profileCard}>
 
-        <Text style={styles.articleText}>
-          Bem-vindo à wiki dedicada ao universo
-          de The Vampire Diaries.
-          {"\n\n"}
-          Explore os personagens, locais e
-          temporadas utilizando o menu acima
-          ou a barra de pesquisa.
-        </Text>
+          <Text
+            style={styles.profileCardTitle}
+          >
+            BEM-VINDA À WIKI
+          </Text>
 
-      </View>
+          <Text
+            style={styles.profileCardName}
+          >
+            {perfil.nome}{" "}
+            {perfil.sobrenome}
+          </Text>
+
+          <Text
+            style={styles.profileCardText}
+          >
+            {perfil.especie} •{" "}
+            {perfil.cidade}
+          </Text>
+
+        </View>
+
+      )}
 
       <View style={styles.section}>
 
         <Text style={styles.sectionTitle}>
-          EXPLORE A WIKI
+          DESTAQUES
         </Text>
 
-        <TouchableOpacity
-          style={styles.category}
-          onPress={() =>
-            navigation.navigate("Personagens")
-          }
-        >
-          <Text style={styles.categoryIcon}>
-            👤
-          </Text>
+        <View style={styles.featureGrid}>
 
-          <View>
-            <Text style={styles.categoryTitle}>
+          <TouchableOpacity
+            style={styles.featureCard}
+            onPress={() =>
+              navigation.navigate(
+                "Personagens"
+              )
+            }
+          >
+
+            <Text
+              style={
+                styles.featureIcon
+              }
+            >
+              🧛
+            </Text>
+
+            <Text
+              style={
+                styles.featureTitle
+              }
+            >
               PERSONAGENS
             </Text>
 
-            <Text style={styles.categoryText}>
-              Veja os personagens.
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.category}
-          onPress={() =>
-            navigation.navigate("MysticFalls")
-          }
-        >
-          <Text style={styles.categoryIcon}>
-            📍
-          </Text>
-
-          <View>
-            <Text style={styles.categoryTitle}>
-              MYSTIC FALLS
+            <Text
+              style={
+                styles.featureText
+              }
+            >
+              Conheça os personagens
+              da série.
             </Text>
 
-            <Text style={styles.categoryText}>
-              Conheça os principais locais.
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.featureCard}
+            onPress={() =>
+              navigation.navigate(
+                "Temporadas"
+              )
+            }
+          >
+
+            <Text
+              style={
+                styles.featureIcon
+              }
+            >
+              📺
             </Text>
-          </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.category}
-          onPress={() =>
-            navigation.navigate("Temporadas")
-          }
-        >
-          <Text style={styles.categoryIcon}>
-            📺
-          </Text>
-
-          <View>
-            <Text style={styles.categoryTitle}>
+            <Text
+              style={
+                styles.featureTitle
+              }
+            >
               TEMPORADAS
             </Text>
 
-            <Text style={styles.categoryText}>
-              Veja as temporadas da série.
+            <Text
+              style={
+                styles.featureText
+              }
+            >
+              Veja todas as temporadas
+              e episódios.
             </Text>
-          </View>
-        </TouchableOpacity>
+
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.featureCard}
+            onPress={() =>
+              navigation.navigate(
+                "MysticFalls"
+              )
+            }
+          >
+
+            <Text
+              style={
+                styles.featureIcon
+              }
+            >
+              📍
+            </Text>
+
+            <Text
+              style={
+                styles.featureTitle
+              }
+            >
+              MYSTIC FALLS
+            </Text>
+
+            <Text
+              style={
+                styles.featureText
+              }
+            >
+              Explore os principais
+              locais.
+            </Text>
+
+          </TouchableOpacity>
+
+        </View>
 
       </View>
 
@@ -930,127 +1267,263 @@ function InicioScreen({ navigation, route }) {
   );
 }
 
-/* =====================================================
+/* =========================================================
    PERSONAGENS
-===================================================== */
+========================================================= */
 
-function PersonagensScreen({ navigation }) {
-  return (
-    <View style={styles.page}>
+function PersonagensScreen({
+  navigation,
+}) {
 
-      <WikiHeader navigation={navigation} />
-
-      <FlatList
-        data={personagens}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <View style={styles.pageHeading}>
-            <Text style={styles.pageHeadingTitle}>
-              PERSONAGENS
-            </Text>
-
-            <Text style={styles.pageHeadingText}>
-              Personagens do universo de
-              The Vampire Diaries.
-            </Text>
-          </View>
-        }
-        renderItem={({ item }) => (
-          <View style={styles.characterCard}>
-
-            <View style={styles.characterIcon}>
-              <Text style={styles.characterEmoji}>
-                👤
-              </Text>
-            </View>
-
-            <View style={styles.characterInfo}>
-
-              <Text style={styles.characterName}>
-                {item.nome}
-              </Text>
-
-              <Text style={styles.characterSpecies}>
-                {item.especie}
-              </Text>
-
-              <Text style={styles.characterDescription}>
-                {item.descricao}
-              </Text>
-
-            </View>
-
-          </View>
-        )}
-      />
-
-    </View>
-  );
-}
-
-/* =====================================================
-   MYSTIC FALLS
-===================================================== */
-
-function MysticFallsScreen({ navigation }) {
   return (
     <ScrollView
       style={styles.page}
-      contentContainerStyle={styles.articlePage}
+      contentContainerStyle={
+        styles.content
+      }
     >
 
-      <WikiHeader navigation={navigation} />
+      <WikiHeader
+        navigation={navigation}
+      />
 
-      <View style={styles.pageHeading}>
-        <Text style={styles.pageHeadingTitle}>
+      <View style={styles.section}>
+
+        <Text style={styles.sectionTitle}>
+          PERSONAGENS
+        </Text>
+
+        <Text style={styles.sectionIntro}>
+          Conheça os principais personagens
+          de The Vampire Diaries.
+        </Text>
+
+        <View style={styles.characterGrid}>
+
+          {personagens.map(
+            (personagem) => (
+
+            <View
+              key={personagem.id}
+              style={styles.characterCard}
+            >
+
+              <Image
+                source={{
+                  uri:
+                    personagem.imagem ||
+                    IMAGEM_PADRAO,
+                }}
+                style={
+                  styles.characterImage
+                }
+                resizeMode="cover"
+              />
+
+              <View
+                style={
+                  styles.characterInfo
+                }
+              >
+
+                <Text
+                  style={
+                    styles.characterName
+                  }
+                >
+                  {personagem.nome}
+                </Text>
+
+                <Text
+                  style={
+                    styles.characterSpecies
+                  }
+                >
+                  {personagem.especie}
+                </Text>
+
+                <Text
+                  style={
+                    styles.characterDescription
+                  }
+                >
+                  {personagem.descricao}
+                </Text>
+
+              </View>
+
+            </View>
+
+          )
+          )}
+
+        </View>
+
+      </View>
+
+    </ScrollView>
+  );
+}
+
+/* =========================================================
+   TEMPORADAS
+========================================================= */
+
+function TemporadasScreen({
+  navigation,
+}) {
+
+  return (
+    <ScrollView
+      style={styles.page}
+      contentContainerStyle={
+        styles.content
+      }
+    >
+
+      <WikiHeader
+        navigation={navigation}
+      />
+
+      <View style={styles.section}>
+
+        <Text style={styles.sectionTitle}>
+          TEMPORADAS
+        </Text>
+
+        <View style={styles.seasonGrid}>
+
+          {temporadas.map(
+            (temporada) => (
+
+            <View
+              key={temporada.id}
+              style={styles.seasonCard}
+            >
+
+              <Image
+                source={{
+                  uri:
+                    temporada.imagem ||
+                    IMAGEM_PADRAO,
+                }}
+                style={
+                  styles.seasonImage
+                }
+              />
+
+              <View
+                style={
+                  styles.seasonInfo
+                }
+              >
+
+                <Text
+                  style={
+                    styles.seasonTitle
+                  }
+                >
+                  {temporada.nome}
+                </Text>
+
+                <Text
+                  style={
+                    styles.seasonEpisodes
+                  }
+                >
+                  {temporada.episodios} episódios
+                </Text>
+
+              </View>
+
+            </View>
+
+          )
+          )}
+
+        </View>
+
+      </View>
+
+    </ScrollView>
+  );
+}
+
+/* =========================================================
+   MYSTIC FALLS
+========================================================= */
+
+function MysticFallsScreen({
+  navigation,
+}) {
+
+  return (
+    <ScrollView
+      style={styles.page}
+      contentContainerStyle={
+        styles.content
+      }
+    >
+
+      <WikiHeader
+        navigation={navigation}
+      />
+
+      <View style={styles.section}>
+
+        <Text style={styles.sectionTitle}>
           MYSTIC FALLS
         </Text>
 
-        <Text style={styles.pageHeadingText}>
-          Uma cidade marcada por acontecimentos
-          sobrenaturais.
-        </Text>
-      </View>
-
-      <View style={styles.article}>
-
-        <Text style={styles.articleTitle}>
-          Sobre Mystic Falls
-        </Text>
-
-        <Text style={styles.articleText}>
-          Mystic Falls é a principal cidade
-          associada aos acontecimentos de
-          The Vampire Diaries.
-          {"\n\n"}
-          A cidade possui uma história ligada a
-          diversas famílias e acontecimentos
-          sobrenaturais.
-        </Text>
-
-      </View>
-
-      <View style={styles.article}>
-
-        <Text style={styles.articleTitle}>
-          Locais importantes
+        <Text style={styles.sectionIntro}>
+          Explore alguns dos locais
+          importantes da história.
         </Text>
 
         {locais.map((local) => (
+
           <View
             key={local.id}
-            style={styles.location}
+            style={styles.locationCard}
           >
-            <Text style={styles.locationName}>
-              {local.nome}
-            </Text>
 
-            <Text style={styles.locationText}>
-              {local.descricao}
-            </Text>
+            <Image
+              source={{
+                uri:
+                  local.imagem ||
+                  IMAGEM_PADRAO,
+              }}
+              style={
+                styles.locationImage
+              }
+            />
+
+            <View
+              style={
+                styles.locationInfo
+              }
+            >
+
+              <Text
+                style={
+                  styles.locationTitle
+                }
+              >
+                {local.titulo}
+              </Text>
+
+              <Text
+                style={
+                  styles.locationSubtitle
+                }
+              >
+                {local.subtitulo}
+              </Text>
+
+            </View>
+
           </View>
+
         ))}
 
       </View>
@@ -1059,122 +1532,594 @@ function MysticFallsScreen({ navigation }) {
   );
 }
 
-/* =====================================================
-   TEMPORADAS
-===================================================== */
+/* =========================================================
+   ESTILOS
+========================================================= */
 
-function TemporadasScreen({ navigation }) {
-  return (
-    <View style={styles.page}>
+const styles = StyleSheet.create({
 
-      <WikiHeader navigation={navigation} />
+  page: {
+    flex: 1,
+    backgroundColor:
+      COLORS.background,
+  },
 
-      <FlatList
-        data={temporadas}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        ListHeaderComponent={
-          <View style={styles.pageHeading}>
+  content: {
+    paddingBottom: 40,
+  },
 
-            <Text style={styles.pageHeadingTitle}>
-              TEMPORADAS
-            </Text>
+  /* HEADER */
 
-            <Text style={styles.pageHeadingText}>
-              Confira as oito temporadas.
-            </Text>
+  headerContainer: {
+    backgroundColor:
+      COLORS.header,
+    borderBottomWidth: 1,
+    borderBottomColor:
+      COLORS.border,
+  },
 
-          </View>
-        }
-        renderItem={({ item }) => (
-          <View style={styles.seasonCard}>
+  topBar: {
+    height: 42,
+    backgroundColor:
+      COLORS.dark,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent:
+      "space-between",
+    paddingHorizontal: 18,
+  },
 
-            <View style={styles.seasonNumber}>
-              <Text style={styles.seasonNumberText}>
-                {item.id}
-              </Text>
-            </View>
+  topBarText: {
+    color: COLORS.gray,
+    fontSize: 12,
+    fontWeight: "bold",
+    letterSpacing: 2,
+  },
 
-            <View style={styles.seasonInfo}>
-              <Text style={styles.seasonName}>
-                {item.nome}
-              </Text>
+  topBarWiki: {
+    color: COLORS.gold,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
 
-              <Text style={styles.seasonEpisodes}>
-                {item.episodios} episódios
-              </Text>
-            </View>
+  logoArea: {
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+  },
 
-            <Text style={styles.arrow}>
-              ›
-            </Text>
+  logoTitle: {
+    color: COLORS.white,
+    fontSize: 25,
+    fontWeight: "bold",
+  },
 
-          </View>
-        )}
-      />
+  logoSubtitle: {
+    color: COLORS.gold,
+    fontSize: 9,
+    marginTop: 6,
+    letterSpacing: 1,
+  },
 
-    </View>
-  );
-}
+  searchArea: {
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    paddingBottom: 12,
+  },
 
-/* =====================================================
-   ERRO
-===================================================== */
+  searchInput: {
+    flex: 1,
+    height: 44,
+    backgroundColor:
+      COLORS.panelDark,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    color: COLORS.white,
+  },
 
-function ErroScreen({ navigation, route }) {
-  const mensagem =
-    route.params?.mensagem ||
-    "Ocorreu um erro.";
+  searchButton: {
+    width: 48,
+    height: 44,
+    marginLeft: 6,
+    backgroundColor:
+      COLORS.red,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+  },
 
-  return (
-    <View style={styles.errorPage}>
+  searchIcon: {
+    fontSize: 19,
+  },
 
-      <Text style={styles.bigError}>
-        ⚠
-      </Text>
+  /* RESULTADOS */
 
-      <Text style={styles.errorPageTitle}>
-        ERRO
-      </Text>
+  searchResults: {
+    backgroundColor:
+      COLORS.panel,
+    marginHorizontal: 15,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+  },
 
-      <View style={styles.errorPageBox}>
-        <Text style={styles.errorPageText}>
-          {mensagem}
-        </Text>
-      </View>
+  searchResultsTitle: {
+    color: COLORS.gold,
+    fontSize: 11,
+    fontWeight: "bold",
+    padding: 10,
+  },
 
-      <TouchableOpacity
-        style={styles.redButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.redButtonText}>
-          VOLTAR
-        </Text>
-      </TouchableOpacity>
+  searchResult: {
+    minHeight: 70,
+    flexDirection: "row",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor:
+      COLORS.border,
+    padding: 8,
+  },
 
-    </View>
-  );
-}
+  /* AQUI ESTÁ A FOTO DO RESULTADO */
 
-/* =====================================================
+  searchResultImage: {
+    width: 52,
+    height: 52,
+    borderRadius: 4,
+    backgroundColor:
+      COLORS.dark,
+  },
+
+  searchResultText: {
+    flex: 1,
+    marginLeft: 10,
+  },
+
+  searchResultTitle: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
+  searchResultSubtitle: {
+    color: COLORS.gray,
+    fontSize: 11,
+    marginTop: 4,
+  },
+
+  searchArrow: {
+    color: COLORS.gold,
+    fontSize: 28,
+    paddingHorizontal: 8,
+  },
+
+  noResults: {
+    padding: 15,
+  },
+
+  noResultsTitle: {
+    color: COLORS.white,
+    fontWeight: "bold",
+  },
+
+  noResultsText: {
+    color: COLORS.gray,
+    marginTop: 6,
+    lineHeight: 18,
+  },
+
+  /* MENU */
+
+  menu: {
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+  },
+
+  menuItem: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+
+  menuText: {
+    color: COLORS.gray,
+    fontSize: 11,
+    fontWeight: "bold",
+  },
+
+  /* INÍCIO */
+
+  hero: {
+    margin: 15,
+    padding: 25,
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    alignItems: "center",
+  },
+
+  heroTitle: {
+    color: COLORS.white,
+    fontSize: 23,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  heroSubtitle: {
+    color: COLORS.gold,
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 4,
+  },
+
+  heroText: {
+    color: COLORS.gray,
+    textAlign: "center",
+    marginTop: 15,
+    lineHeight: 20,
+  },
+
+  section: {
+    padding: 15,
+  },
+
+  sectionTitle: {
+    color: COLORS.gold,
+    fontSize: 18,
+    fontWeight: "bold",
+    borderBottomWidth: 1,
+    borderBottomColor:
+      COLORS.border,
+    paddingBottom: 10,
+    marginBottom: 15,
+  },
+
+  sectionIntro: {
+    color: COLORS.gray,
+    marginBottom: 18,
+    lineHeight: 20,
+  },
+
+  featureGrid: {
+    gap: 12,
+  },
+
+  featureCard: {
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    padding: 18,
+  },
+
+  featureIcon: {
+    fontSize: 30,
+  },
+
+  featureTitle: {
+    color: COLORS.white,
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+
+  featureText: {
+    color: COLORS.gray,
+    marginTop: 6,
+    lineHeight: 18,
+  },
+
+  /* PERFIL CARD */
+
+  profileCard: {
+    marginHorizontal: 15,
+    padding: 18,
+    backgroundColor:
+      COLORS.panel,
+    borderLeftWidth: 4,
+    borderLeftColor:
+      COLORS.red,
+  },
+
+  profileCardTitle: {
+    color: COLORS.gold,
+    fontSize: 11,
+    fontWeight: "bold",
+  },
+
+  profileCardName: {
+    color: COLORS.white,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+
+  profileCardText: {
+    color: COLORS.gray,
+    marginTop: 5,
+  },
+
+  /* PERSONAGENS */
+
+  characterGrid: {
+    gap: 15,
+  },
+
+  characterCard: {
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    overflow: "hidden",
+  },
+
+  characterImage: {
+    width: "100%",
+    height: 330,
+    backgroundColor:
+      COLORS.dark,
+  },
+
+  characterInfo: {
+    padding: 15,
+  },
+
+  characterName: {
+    color: COLORS.white,
+    fontSize: 19,
+    fontWeight: "bold",
+  },
+
+  characterSpecies: {
+    color: COLORS.gold,
+    fontSize: 12,
+    marginTop: 5,
+  },
+
+  characterDescription: {
+    color: COLORS.gray,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 10,
+  },
+
+  /* TEMPORADAS */
+
+  seasonGrid: {
+    gap: 15,
+  },
+
+  seasonCard: {
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    overflow: "hidden",
+  },
+
+  seasonImage: {
+    width: "100%",
+    height: 180,
+    backgroundColor:
+      COLORS.dark,
+  },
+
+  seasonInfo: {
+    padding: 15,
+  },
+
+  seasonTitle: {
+    color: COLORS.white,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  seasonEpisodes: {
+    color: COLORS.gold,
+    marginTop: 5,
+  },
+
+  /* LOCAIS */
+
+  locationCard: {
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    marginBottom: 15,
+    overflow: "hidden",
+  },
+
+  locationImage: {
+    width: "100%",
+    height: 210,
+    backgroundColor:
+      COLORS.dark,
+  },
+
+  locationInfo: {
+    padding: 15,
+  },
+
+  locationTitle: {
+    color: COLORS.white,
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  locationSubtitle: {
+    color: COLORS.gold,
+    marginTop: 5,
+  },
+
+  /* LOGIN */
+
+  loginContainer: {
+    padding: 20,
+    justifyContent: "center",
+    flexGrow: 1,
+  },
+
+  loginLogo: {
+    fontSize: 50,
+    textAlign: "center",
+  },
+
+  loginTitle: {
+    color: COLORS.white,
+    textAlign: "center",
+    fontSize: 23,
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+
+  loginSubtitle: {
+    color: COLORS.gold,
+    textAlign: "center",
+    fontWeight: "bold",
+    marginBottom: 25,
+  },
+
+  wikiBox: {
+    backgroundColor:
+      COLORS.panel,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+  },
+
+  boxHeader: {
+    backgroundColor:
+      COLORS.dark,
+    padding: 13,
+    borderBottomWidth: 1,
+    borderBottomColor:
+      COLORS.border,
+  },
+
+  boxHeaderText: {
+    color: COLORS.gold,
+    fontWeight: "bold",
+  },
+
+  boxContent: {
+    padding: 18,
+  },
+
+  label: {
+    color: COLORS.gray,
+    fontSize: 12,
+    marginBottom: 6,
+    marginTop: 10,
+  },
+
+  input: {
+    height: 45,
+    backgroundColor:
+      COLORS.panelDark,
+    borderWidth: 1,
+    borderColor:
+      COLORS.border,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    color: COLORS.white,
+  },
+
+  textArea: {
+    height: 100,
+    paddingTop: 12,
+    textAlignVertical: "top",
+  },
+
+  redButton: {
+    backgroundColor:
+      COLORS.red,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: 18,
+    borderRadius: 4,
+  },
+
+  redButtonText: {
+    color: COLORS.white,
+    fontWeight: "bold",
+  },
+
+  loginError: {
+    backgroundColor:
+      COLORS.redDark,
+    padding: 12,
+    marginTop: 15,
+    borderWidth: 1,
+    borderColor:
+      COLORS.redLight,
+  },
+
+  loginErrorTitle: {
+    color: COLORS.gold,
+    fontWeight: "bold",
+  },
+
+  loginErrorText: {
+    color: COLORS.white,
+    marginTop: 5,
+  },
+
+  footerText: {
+    color: COLORS.grayDark,
+    textAlign: "center",
+    marginTop: 18,
+  },
+
+  /* PERFIL */
+
+  profileContainer: {
+    paddingBottom: 40,
+  },
+
+  simpleHeader: {
+    backgroundColor:
+      COLORS.dark,
+    padding: 18,
+  },
+
+  simpleHeaderTitle: {
+    color: COLORS.gold,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  profileWelcome: {
+    color: COLORS.white,
+    fontSize: 15,
+    marginBottom: 10,
+  },
+
+});
+
+/* =========================================================
    NAVEGAÇÃO
-===================================================== */
+========================================================= */
 
-function AppNavigator() {
+function App() {
+
   return (
     <NavigationContainer>
 
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{
-          headerStyle: {
-            backgroundColor: COLORS.header,
-          },
-
-          headerTintColor: COLORS.goldLight,
-
-          headerTitleStyle: {
-            fontWeight: "bold",
+          headerShown: false,
+          contentStyle: {
+            backgroundColor:
+              COLORS.background,
           },
         }}
       >
@@ -1182,57 +2127,31 @@ function AppNavigator() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
           name="Perfil"
           component={PerfilScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
           name="Inicio"
           component={InicioScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
           name="Personagens"
           component={PersonagensScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        <Stack.Screen
-          name="MysticFalls"
-          component={MysticFallsScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
           name="Temporadas"
           component={TemporadasScreen}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen
-          name="Erro"
-          component={ErroScreen}
-          options={{
-            title: "Erro",
-          }}
+          name="MysticFalls"
+          component={MysticFallsScreen}
         />
 
       </Stack.Navigator>
@@ -1241,577 +2160,4 @@ function AppNavigator() {
   );
 }
 
-/* =====================================================
-   APP
-===================================================== */
-
-export default function App() {
-  return <AppNavigator />;
-}
-
-/* =====================================================
-   ESTILOS
-===================================================== */
-
-const styles = StyleSheet.create({
-
-  page: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-
-  header: {
-    backgroundColor: COLORS.header,
-  },
-
-  topBar: {
-    height: 35,
-    backgroundColor: COLORS.dark,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 15,
-  },
-
-  topBarText: {
-    color: "#aaa",
-    fontSize: 10,
-    fontWeight: "bold",
-  },
-
-  wikiText: {
-    color: COLORS.redLight,
-    fontSize: 10,
-    fontWeight: "bold",
-    marginLeft: 5,
-  },
-
-  logoArea: {
-    padding: 17,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-
-  logo: {
-    color: COLORS.white,
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-
-  logoSub: {
-    color: COLORS.gray,
-    fontSize: 9,
-    marginTop: 5,
-    letterSpacing: 1,
-  },
-
-  searchArea: {
-    flexDirection: "row",
-    padding: 10,
-  },
-
-  searchInput: {
-    flex: 1,
-    height: 42,
-    backgroundColor: COLORS.dark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    color: COLORS.white,
-    paddingHorizontal: 12,
-  },
-
-  searchButton: {
-    width: 48,
-    height: 42,
-    backgroundColor: COLORS.red,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  searchButtonText: {
-    fontSize: 18,
-  },
-
-  resultsBox: {
-    backgroundColor: "#202124",
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-    maxHeight: 330,
-  },
-
-  resultsTitle: {
-    color: COLORS.goldLight,
-    fontWeight: "bold",
-    fontSize: 11,
-    padding: 12,
-  },
-
-  resultItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#3d3e42",
-  },
-
-  resultIcon: {
-    width: 38,
-    height: 38,
-    backgroundColor: COLORS.redDark,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-
-  resultText: {
-    flex: 1,
-  },
-
-  resultTitle: {
-    color: COLORS.white,
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-
-  resultSubtitle: {
-    color: COLORS.gray,
-    fontSize: 11,
-    marginTop: 3,
-  },
-
-  resultArrow: {
-    color: COLORS.goldLight,
-    fontSize: 25,
-  },
-
-  noResult: {
-    padding: 15,
-  },
-
-  noResultTitle: {
-    color: COLORS.white,
-    fontWeight: "bold",
-  },
-
-  noResultText: {
-    color: COLORS.gray,
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 5,
-  },
-
-  menu: {
-    backgroundColor: COLORS.redDark,
-    maxHeight: 45,
-  },
-
-  menuButton: {
-    height: 45,
-    paddingHorizontal: 17,
-    justifyContent: "center",
-    borderRightWidth: 1,
-    borderRightColor: "#7a171c",
-  },
-
-  menuText: {
-    color: COLORS.white,
-    fontSize: 11,
-    fontWeight: "bold",
-  },
-
-  loginPage: {
-    minHeight: "100%",
-    alignItems: "center",
-    paddingBottom: 40,
-    backgroundColor: COLORS.background,
-  },
-
-  vampireIcon: {
-    fontSize: 55,
-    marginTop: 40,
-  },
-
-  loginTitle: {
-    color: COLORS.white,
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 10,
-  },
-
-  loginWiki: {
-    color: COLORS.redLight,
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 5,
-    marginBottom: 20,
-  },
-
-  loginBox: {
-    width: "92%",
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-
-  loginHeader: {
-    backgroundColor: COLORS.redDark,
-    padding: 14,
-  },
-
-  loginHeaderText: {
-    color: COLORS.white,
-    fontWeight: "bold",
-    fontSize: 13,
-  },
-
-  loginContent: {
-    padding: 18,
-  },
-
-  label: {
-    color: COLORS.gray,
-    fontSize: 13,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 6,
-  },
-
-  input: {
-    height: 44,
-    backgroundColor: COLORS.dark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    color: COLORS.white,
-    paddingHorizontal: 12,
-  },
-
-  errorBox: {
-    backgroundColor: "#3b171a",
-    borderWidth: 1,
-    borderColor: COLORS.redLight,
-    padding: 12,
-    marginTop: 15,
-  },
-
-  errorTitle: {
-    color: "#e46a70",
-    fontWeight: "bold",
-  },
-
-  errorText: {
-    color: COLORS.white,
-    fontSize: 13,
-    marginTop: 4,
-  },
-
-  redButton: {
-    height: 46,
-    backgroundColor: COLORS.red,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 18,
-    borderWidth: 1,
-    borderColor: COLORS.redLight,
-  },
-
-  redButtonText: {
-    color: COLORS.white,
-    fontWeight: "bold",
-    fontSize: 13,
-    letterSpacing: 1,
-  },
-
-  profilePage: {
-    paddingBottom: 40,
-  },
-
-  simpleHeader: {
-    backgroundColor: COLORS.dark,
-    padding: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-
-  simpleHeaderText: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  profileUser: {
-    color: COLORS.goldLight,
-    marginBottom: 8,
-  },
-
-  homePage: {
-    paddingBottom: 40,
-  },
-
-  hero: {
-    margin: 12,
-    padding: 25,
-    backgroundColor: "#0e0f11",
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    alignItems: "center",
-  },
-
-  heroSmall: {
-    color: COLORS.redLight,
-    fontSize: 16,
-    letterSpacing: 7,
-    fontWeight: "bold",
-  },
-
-  heroTitle: {
-    color: COLORS.white,
-    fontSize: 40,
-    fontWeight: "bold",
-    letterSpacing: 3,
-  },
-
-  heroWelcome: {
-    color: COLORS.goldLight,
-    fontSize: 13,
-    marginTop: 12,
-  },
-
-  article: {
-    margin: 12,
-    padding: 17,
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-
-  articleTitle: {
-    color: COLORS.white,
-    fontSize: 22,
-    fontWeight: "bold",
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-  },
-
-  articleText: {
-    color: "#d0d0d0",
-    fontSize: 14,
-    lineHeight: 22,
-    marginTop: 13,
-  },
-
-  section: {
-    padding: 12,
-  },
-
-  sectionTitle: {
-    color: COLORS.white,
-    fontSize: 20,
-    fontWeight: "bold",
-    borderBottomWidth: 2,
-    borderBottomColor: COLORS.red,
-    paddingBottom: 8,
-    marginBottom: 12,
-  },
-
-  category: {
-    backgroundColor: COLORS.panel,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 15,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  categoryIcon: {
-    fontSize: 30,
-    marginRight: 14,
-  },
-
-  categoryTitle: {
-    color: COLORS.goldLight,
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-
-  categoryText: {
-    color: COLORS.gray,
-    fontSize: 12,
-    marginTop: 3,
-  },
-
-  list: {
-    padding: 12,
-    paddingBottom: 40,
-  },
-
-  pageHeading: {
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 16,
-    marginBottom: 12,
-  },
-
-  pageHeadingTitle: {
-    color: COLORS.white,
-    fontSize: 25,
-    fontWeight: "bold",
-  },
-
-  pageHeadingText: {
-    color: COLORS.gray,
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 6,
-  },
-
-  characterCard: {
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 15,
-    marginBottom: 12,
-    flexDirection: "row",
-  },
-
-  characterIcon: {
-    width: 70,
-    height: 70,
-    backgroundColor: COLORS.redDark,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 13,
-  },
-
-  characterEmoji: {
-    fontSize: 30,
-  },
-
-  characterInfo: {
-    flex: 1,
-  },
-
-  characterName: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  characterSpecies: {
-    color: COLORS.goldLight,
-    fontSize: 12,
-    marginTop: 4,
-  },
-
-  characterDescription: {
-    color: COLORS.gray,
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 8,
-  },
-
-  articlePage: {
-    paddingBottom: 40,
-  },
-
-  location: {
-    paddingVertical: 13,
-    borderBottomWidth: 1,
-    borderBottomColor: "#414247",
-  },
-
-  locationName: {
-    color: COLORS.goldLight,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
-  locationText: {
-    color: COLORS.gray,
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 4,
-  },
-
-  seasonCard: {
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 12,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  seasonNumber: {
-    width: 50,
-    height: 50,
-    backgroundColor: COLORS.redDark,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  seasonNumberText: {
-    color: COLORS.white,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-
-  seasonInfo: {
-    flex: 1,
-    paddingLeft: 13,
-  },
-
-  seasonName: {
-    color: COLORS.white,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
-  seasonEpisodes: {
-    color: COLORS.gray,
-    fontSize: 12,
-    marginTop: 4,
-  },
-
-  arrow: {
-    color: COLORS.goldLight,
-    fontSize: 28,
-  },
-
-  errorPage: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 25,
-  },
-
-  bigError: {
-    fontSize: 55,
-  },
-
-  errorPageTitle: {
-    color: COLORS.white,
-    fontSize: 25,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-
-  errorPageBox: {
-    width: "100%",
-    backgroundColor: COLORS.panelDark,
-    borderWidth: 1,
-    borderColor: COLORS.red,
-    padding: 20,
-    marginTop: 20,
-  },
-
-  errorPageText: {
-    color: COLORS.white,
-    textAlign: "center",
-    lineHeight: 22,
-  },
-});
+export default App;
