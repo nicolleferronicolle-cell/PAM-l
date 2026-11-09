@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
@@ -10,6 +11,7 @@ import { auth } from '../../firebase/firebase';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [entrando, setEntrando] = useState(false);
 
   async function entrar() {
     if (!email.trim() || !senha) {
@@ -18,17 +20,22 @@ export default function Login({ navigation }) {
     }
 
     try {
+      setEntrando(true);
       await signInWithEmailAndPassword(auth, email.trim(), senha);
       navigation.replace('Home');
     } catch (erro) {
-      Alert.alert('Erro', 'E-mail ou senha incorretos.');
+      Alert.alert('Erro', 'Não foi possível entrar: ' + erro.message);
+    } finally {
+      setEntrando(false);
     }
   }
 
   return (
     <View style={estilos.container}>
       <Text style={estilos.titulo}>🩸 THE VAMPIRE DIARIES</Text>
-      <Text style={estilos.subtitulo}>Bem-vindo a Mystic Falls</Text>
+      <Text style={estilos.subtitulo}>
+        Bem-vindo a Mystic Falls
+      </Text>
 
       <TextInput
         style={estilos.input}
@@ -49,11 +56,19 @@ export default function Login({ navigation }) {
         onChangeText={setSenha}
       />
 
-      <TouchableOpacity style={estilos.botao} onPress={entrar}>
-        <Text style={estilos.textoBotao}>ENTRAR</Text>
+      <TouchableOpacity
+        style={estilos.botao}
+        onPress={entrar}
+        disabled={entrando}
+      >
+        <Text style={estilos.textoBotao}>
+          {entrando ? 'ENTRANDO...' : 'ENTRAR'}
+        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Cadastro')}
+      >
         <Text style={estilos.link}>Criar uma conta</Text>
       </TouchableOpacity>
     </View>
@@ -62,27 +77,44 @@ export default function Login({ navigation }) {
 
 const estilos = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: '#16080D',
-    justifyContent: 'center', padding: 30
+    flex: 1,
+    backgroundColor: '#16080D',
+    justifyContent: 'center',
+    padding: 30
   },
   titulo: {
-    fontSize: 27, color: '#E6C5C5',
-    fontWeight: 'bold', textAlign: 'center', marginBottom: 15
+    fontSize: 27,
+    color: '#E6C5C5',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15
   },
   subtitulo: {
-    color: '#C78C9B', fontSize: 18,
-    textAlign: 'center', marginBottom: 35
+    color: '#C78C9B',
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 35
   },
   input: {
-    backgroundColor: '#2C151F', color: '#FFF',
-    padding: 15, borderRadius: 10, marginBottom: 18
+    backgroundColor: '#2C151F',
+    color: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 18
   },
   botao: {
-    backgroundColor: '#8B1E3F', padding: 17,
-    borderRadius: 10, alignItems: 'center'
+    backgroundColor: '#8B1E3F',
+    padding: 17,
+    borderRadius: 10,
+    alignItems: 'center'
   },
-  textoBotao: { color: '#FFF', fontWeight: 'bold' },
+  textoBotao: {
+    color: '#FFF',
+    fontWeight: 'bold'
+  },
   link: {
-    color: '#E9A6B8', textAlign: 'center', marginTop: 20
+    color: '#E9A6B8',
+    textAlign: 'center',
+    marginTop: 20
   }
 });

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
@@ -28,17 +29,21 @@ export default function Home({ navigation }) {
       where('usuarioId', '==', usuario.uid)
     );
 
-    return onSnapshot(consulta, (resultado) => {
-      setPersonagens(resultado.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      })));
-    }, (erro) => Alert.alert('Erro', erro.message));
-  }, []);
+    return onSnapshot(
+      consulta,
+      (resultado) => {
+        setPersonagens(resultado.docs.map((documento) => ({
+          id: documento.id,
+          ...documento.data()
+        })));
+      },
+      (erro) => Alert.alert('Erro', erro.message)
+    );
+  }, [navigation]);
 
   async function salvar() {
     if (!nome.trim() || !especie.trim()) {
-      Alert.alert('Atenção', 'Preencha os campos!');
+      Alert.alert('Atenção', 'Preencha todos os campos.');
       return;
     }
 
@@ -56,7 +61,7 @@ export default function Home({ navigation }) {
 
       setNome('');
       setEspecie('');
-      Alert.alert('Sucesso', 'Personagem salvo!');
+      Alert.alert('Sucesso', 'Personagem cadastrado!');
     } catch (erro) {
       Alert.alert('Erro', erro.message);
     }
@@ -70,16 +75,22 @@ export default function Home({ navigation }) {
         ListHeaderComponent={
           <View>
             <Text style={estilos.titulo}>🩸 MYSTIC FALLS</Text>
-            <Text style={estilos.subtitulo}>Meu diário sobrenatural</Text>
+            <Text style={estilos.subtitulo}>
+              Meu diário sobrenatural
+            </Text>
 
             <TouchableOpacity
               style={estilos.botao}
               onPress={() => navigation.navigate('Perfil')}
             >
-              <Text style={estilos.textoBotao}>MEU PERFIL</Text>
+              <Text style={estilos.textoBotao}>
+                MEU PERFIL
+              </Text>
             </TouchableOpacity>
 
-            <Text style={estilos.label}>Cadastrar personagem</Text>
+            <Text style={estilos.label}>
+              Cadastrar personagem
+            </Text>
 
             <TextInput
               style={estilos.input}
@@ -97,11 +108,18 @@ export default function Home({ navigation }) {
               onChangeText={setEspecie}
             />
 
-            <TouchableOpacity style={estilos.botao} onPress={salvar}>
-              <Text style={estilos.textoBotao}>SALVAR PERSONAGEM</Text>
+            <TouchableOpacity
+              style={estilos.botao}
+              onPress={salvar}
+            >
+              <Text style={estilos.textoBotao}>
+                SALVAR PERSONAGEM
+              </Text>
             </TouchableOpacity>
 
-            <Text style={estilos.label}>📖 Personagens cadastrados</Text>
+            <Text style={estilos.label}>
+              📖 Personagens cadastrados
+            </Text>
           </View>
         }
         renderItem={({ item }) => (
@@ -111,11 +129,15 @@ export default function Home({ navigation }) {
 
             <TouchableOpacity
               style={estilos.botao}
-              onPress={() => navigation.navigate('Editar', {
-                personagem: item
-              })}
+              onPress={() =>
+                navigation.navigate('Editar', {
+                  personagem: item
+                })
+              }
             >
-              <Text style={estilos.textoBotao}>EDITAR</Text>
+              <Text style={estilos.textoBotao}>
+                EDITAR PERSONAGEM
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -131,34 +153,56 @@ export default function Home({ navigation }) {
 
 const estilos = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: '#16080D', padding: 25
+    flex: 1,
+    backgroundColor: '#16080D',
+    padding: 25
   },
   titulo: {
-    fontSize: 28, color: '#E6C5C5',
-    textAlign: 'center', fontWeight: 'bold', marginTop: 30
+    fontSize: 28,
+    color: '#E6C5C5',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 30
   },
   subtitulo: {
-    color: '#C78C9B', textAlign: 'center', marginBottom: 20
+    color: '#C78C9B',
+    textAlign: 'center',
+    marginBottom: 20
   },
   label: {
-    color: '#E6C5C5', fontSize: 20,
-    marginVertical: 20, fontWeight: 'bold'
+    color: '#E6C5C5',
+    fontSize: 20,
+    marginVertical: 20,
+    fontWeight: 'bold'
   },
   input: {
-    backgroundColor: '#2C151F', color: '#FFF',
-    padding: 15, borderRadius: 10, marginBottom: 15
+    backgroundColor: '#2C151F',
+    color: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15
   },
   botao: {
-    backgroundColor: '#8B1E3F', padding: 15,
-    alignItems: 'center', borderRadius: 10, marginBottom: 15
+    backgroundColor: '#8B1E3F',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: 15
   },
-  textoBotao: { color: '#FFF', fontWeight: 'bold' },
+  textoBotao: {
+    color: '#FFF',
+    fontWeight: 'bold'
+  },
   card: {
-    backgroundColor: '#2C151F', padding: 18,
-    borderRadius: 10, marginBottom: 15
+    backgroundColor: '#2C151F',
+    padding: 18,
+    borderRadius: 10,
+    marginBottom: 15
   },
   nome: {
-    color: '#FFF', fontSize: 21,
-    fontWeight: 'bold', textAlign: 'center'
+    color: '#FFF',
+    fontSize: 21,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 });
